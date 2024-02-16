@@ -13,7 +13,9 @@ interface IForm{
 }
 
 function ToDoList (){
-    const { register, handleSubmit, formState:{errors},setError } = useForm<IForm>({
+    const { register,
+        handleSubmit,
+        formState:{errors},setError } = useForm<IForm>({
         defaultValues:{
             email:"@naver.com"
         }
@@ -21,7 +23,11 @@ function ToDoList (){
     const onValid = (data:IForm) => {
         console.log(data)
         if(data.passworld !== data.passworld1){
-            setError("passworld1",{message:"not same!!!!!!"},{shouldFocus:true})
+            setError(
+                "passworld1",
+                {message:"not same!!!!!!"},
+                {shouldFocus:true}
+            )
         }
     }
     //setError("extraError",{message:"server online"})
