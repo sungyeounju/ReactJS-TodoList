@@ -1,6 +1,7 @@
 import React, { useState } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
 import styled, { createGlobalStyle } from "styled-components";
-import ToDoList from "./components/ToDoList";
+import { hourSelector, minuteState } from "./components/atoms";
 
 const GlobalStyle = createGlobalStyle`
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap')
@@ -67,10 +68,18 @@ a{
 
 
 function App() {
+  const [minutes, setMinutes] = useRecoilState(minuteState);
+  const [hours, setHours] = useRecoilState(hourSelector);
+  const onMinutesChange = (event:React.FormEvent<HTMLInputElement>) => {
+    setMinutes(+event.currentTarget.value)
+  }
+  const onHoursChange = (event:React.FormEvent<HTMLInputElement>) => {
+    setHours(+event.currentTarget.value)
+  }
   return (
     <>
-      <GlobalStyle />
-      <ToDoList />
+      <input value={minutes} onChange={onMinutesChange} type="number" placeholder="minutes"/>
+      <input value={hours} onChange={onHoursChange} type="number" placeholder="hour"/>
     </>
   );
 }
