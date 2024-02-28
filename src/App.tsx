@@ -1,86 +1,69 @@
-import React, { useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
-import styled, { createGlobalStyle } from "styled-components";
-import { hourSelector, minuteState } from "./components/atoms";
+import {DragDropContext,Droppable,Draggable, DropResult} from "react-beautiful-dnd";
+import { useRecoilState } from "recoil";
+import { styled } from "styled-components";
+import { toDoState } from "./atoms";
+import Board from "./components/Board";
+import DraggableCard from "./components/DraggableCard";
 
-const GlobalStyle = createGlobalStyle`
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap')
-html, body, div, span, applet, object, iframe,
-h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-a, abbr, acronym, address, big, cite, code,
-del, dfn, em, img, ins, kbd, q, s, samp,
-small, strike, strong, sub, sup, tt, var,
-b, u, i, center,
-dl, dt, dd, menu, ol, ul, li,
-fieldset, form, label, legend,
-table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed,
-figure, figcaption, footer, header, hgroup,
-main, menu, nav, output, ruby, section, summary,
-time, mark, audio, video {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  font-size: 100%;
-  font: inherit;
-  vertical-align: baseline;
-}
-/* HTML5 display-role reset for older browsers */
-article, aside, details, figcaption, figure,
-footer, header, hgroup, main, menu, nav, section {
-  display: block;
-}
-/* HTML5 hidden-attribute fix for newer browsers */
-*[hidden] {
-    display: none;
-}
-body {
-  line-height: 1;
-}
-menu, ol, ul {
-  list-style: none;
-}
-blockquote, q {
-  quotes: none;
-}
-blockquote:before, blockquote:after,
-q:before, q:after {
-  content: '';
-  content: none;
-}
-table {
-  border-collapse: collapse;
-  border-spacing: 0;
-}
-*{
-  box-sizing:border-box;
-}
-body{
-  font-family: "Roboto", sans-serif;
-  background-color:${props=>(props.theme.bgColor)};
-  color:${props=>(props.theme.textColor)}
-}
-a{
-  text-decoration:none;
-  color:inherit;
-}
+const Wrapper = styled.div`
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  max-width:640px;
+  width:100%;
+  margin:0 auto;
+`
+const Boards = styled.div`
+  display:grid;
+  gap:10px;
+  width:100%;
+  grid-template-columns:repeat(3,1fr);
 `
 
 
+const toDos = ["g","b","w","a","y","p"];
 function App() {
-  const [minutes, setMinutes] = useRecoilState(minuteState);
-  const [hours, setHours] = useRecoilState(hourSelector);
-  const onMinutesChange = (event:React.FormEvent<HTMLInputElement>) => {
-    setMinutes(+event.currentTarget.value)
-  }
-  const onHoursChange = (event:React.FormEvent<HTMLInputElement>) => {
-    setHours(+event.currentTarget.value)
+  const [toDos, setToDos] = useRecoilState(toDoState);
+  const onDragEnd = (info:DropResult) => {
+    console.log(info)
+    const {destination, draggableId, source} = info;
+    if (!destination) return;
+    if(destination?.droppableId === source.droppableId){// 현재보드와 옮긴보드가 같다면
+      setToDos((allBoards) => {
+        const boardCopy = [...allBoards[source.droppableId]];
+        boardCopy.splice(source.index, 1)
+        boardCopy.splice(destination?.index, 0, draggableId);
+        return {
+          ...allBoards,
+          [source.droppableId] : boardCopy
+        };
+      })
+    }
+    if(destination?.droppableId !== source.droppableId){
+      setToDos((allBoards)=>{
+        const sourceBoard = [...allBoards[source.droppableId]];
+        const destinationBoard = [...allBoards[destination?.droppableId]];
+        sourceBoard.splice(source.index, 1);
+        destinationBoard.splice(destination?.index, 0 , draggableId)
+        return {
+          ...allBoards,
+          [source.droppableId]:sourceBoard,
+          [destination?.droppableId] : destinationBoard
+        }
+      })
+    }
   }
   return (
-    <>
-      <input value={minutes} onChange={onMinutesChange} type="number" placeholder="minutes"/>
-      <input value={hours} onChange={onHoursChange} type="number" placeholder="hour"/>
-    </>
+    <DragDropContext onDragEnd={onDragEnd}>
+      <Wrapper>
+        <Boards>
+          {Object.keys(toDos).map((boardId)=>(
+            <Board boardId={boardId} key={boardId} toDos={toDos[boardId]} />
+          ))}
+        </Boards>
+      </Wrapper>
+    </DragDropContext>
   );
 }
 

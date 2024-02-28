@@ -6,15 +6,11 @@ import { RecoilRoot } from 'recoil';
 import { darkTheme } from './theme';
 import { ThemeProvider } from 'styled-components';
 
-const queryClient = new QueryClient()
-
 ReactDOM.render(
-  <React.StrictMode>
-    <RecoilRoot>
-      <ThemeProvider theme={darkTheme}>
-        <App />       
-      </ThemeProvider>
-    </RecoilRoot>
-  </React.StrictMode>,
+  <RecoilRoot>
+    <ThemeProvider theme={darkTheme}>
+      <App />       
+    </ThemeProvider>
+  </RecoilRoot>,
   document.getElementById('root')
 );
