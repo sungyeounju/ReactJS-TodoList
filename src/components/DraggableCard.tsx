@@ -8,17 +8,18 @@ const Card = styled.div`
   background-color:${(props) => (props.theme.cardColor)}
 `
 interface IDragabbleCardProps{
-    toDo : string;
+    toDoId : number;
+    toDoText:string;
     index: number;
 }
-function DraggableCard({toDo, index}:IDragabbleCardProps){
+function DraggableCard({toDoId,toDoText, index}:IDragabbleCardProps){
     return (
-    <Draggable draggableId={toDo} index={index}>
+    <Draggable draggableId={toDoId+""} index={index}>
     {(magic) => (
       <Card ref={magic.innerRef}
       {...magic.draggableProps}
       {...magic.dragHandleProps}>
-        {toDo}
+        {toDoText}
       </Card>
     )}
   </Draggable> 
