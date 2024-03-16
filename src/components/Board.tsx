@@ -9,7 +9,7 @@ import DraggableCard from "./DraggableCard";
 const Wrapper = styled.div`
   display:flex;
   flex-direction:column;
-  min-height:200px;
+  min-height:300px;
   padding:20px 10px;
   border-radius:5px;
   background-color:${(props)=>(props.theme.boardColor)}
@@ -22,11 +22,21 @@ const Title = styled.strong`
 `
 const Area = styled.div<IAreaProps>`
 flex-grow:1;
+border-radius:3px;
 background-color:${(props) =>
-  props.isDraggingOver ? "pink" : props.isDraggingFromThis ? "red" : "blue"};
+  props.isDraggingOver ? "#ececec" : props.isDraggingFromThis ? "#c7cbd2" : "#DADFE9"};
 `
 const Form = styled.form`
+  display:flex;
   width:100%;
+  input{
+    width:100%;
+    padding:3px 10px;
+    min-height:30px;
+    border:none;
+    border-radius:3px;
+    margin-bottom:5px;
+  }
 `
 
 interface IAreaProps{

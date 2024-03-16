@@ -7,6 +7,7 @@ import DraggableCard from "./components/DraggableCard";
 
 const Wrapper = styled.div`
   display:flex;
+  flex-direction: column;
   justify-content:center;
   align-items:center;
   height:100vh;
@@ -14,11 +15,22 @@ const Wrapper = styled.div`
   width:100%;
   margin:0 auto;
 `
+const Title = styled.strong`
+  display:block;
+  font-size:25px;
+  font-wight:700;
+`
+const Desc = styled.span`
+  display:block;
+  margin-top:20px;
+  font-style: italic;
+`
 const Boards = styled.div`
   display:grid;
   gap:10px;
   width:100%;
   grid-template-columns:repeat(3,1fr);
+  margin-top:20px;
 `
 
 
@@ -59,6 +71,8 @@ function App() {
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Wrapper>
+        <Title>😎 TODO LIST</Title>
+        <Desc>Just type, enter and drag!</Desc>
         <Boards>
           {Object.keys(toDos).map((boardId)=>(
             <Board boardId={boardId} key={boardId} toDos={toDos[boardId]} />
